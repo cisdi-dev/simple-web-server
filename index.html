@@ -1,0 +1,110 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code Review</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700"
+    />
+    <style>
+      body {
+        font-family: "Roboto", sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Code Review</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="about.html">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+    <div>
+      <img
+        src="example-image.jpg"
+        style="height: 600px; width: 600px"
+        alt="Example Image"
+      />
+      <form id="itemForm">
+        <label for="itemName">Product Name:</label>
+        <input type="text" id="itemName" name="itemName" />
+        <br />
+        <br />
+        <label for="itemPrice">Item Price:</label>
+        <input type="text" id="itemPrice" name="itemPrice" />
+
+        <br />
+        <br />
+        <button type="submit">Add Item</button>
+      </form>
+
+      <h2>Items</h2>
+      <div>
+        <div>
+          <div style="display: flex; gap: 10px">
+            <div>Product Name</div>
+            <div>Price</div>
+          </div>
+        </div>
+
+        <div id="itemList" style="display: flex; gap: 10px"></div>
+      </div>
+      <br />
+      <div id="output"></div>
+    </div>
+
+    <script>
+      var items = [{ name: "Kecap ABC", price: 2000 }];
+
+      var totalOutputElement = document.getElementById("output");
+      var itemListElement = document.getElementById("itemList");
+      totalOutputElement.textContent = "Total price: " + calculateTotal(items);
+      renderItems(items);
+
+      function renderItems(items) {
+        const itemListElement = document.getElementById("itemList");
+        itemListElement.innerHTML = "";
+
+        items.forEach((item) => {
+          const row = document.createElement("div");
+          row.style.display = "flex";
+          row.style.gap = "10px";
+          row.innerHTML = `
+          <div>${item.name}</div>
+          <div>${item.price}</div>
+        `;
+          itemListElement.appendChild(row);
+        });
+      }
+      function calculateTotal(items) {
+        var total = 0;
+        for (let i = 0; i < items.length; i++) {
+          total += items[i].price;
+        }
+        return total;
+      }
+      document
+        .getElementById("itemForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const itemName = document.getElementById("itemName").value;
+          const itemPrice = parseFloat(
+            document.getElementById("itemPrice").value
+          );
+
+          items.push({ name: itemName, price: itemPrice });
+          renderItems(items);
+          totalOutputElement.textContent =
+            "Total price: " + calculateTotal(items);
+
+          document.getElementById("itemName").value = "";
+          document.getElementById("itemPrice").value = "";
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Code Review 2</title>
+  </head>
+  <body>
+    <header>
+      <h1>Code Review 2</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="login.html">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+    <button onclick="authenticateWithGoogle()">Authenticate with Google</button>
+  </body>
+  <script>
+    handleOAuthCallback();
+  </script>
+  <script>
+    var clientSecret = "your_client_secret";
+
+    function authenticateWithGoogle() {
+      window.location.href =
+        "http://accounts.google.com/oauth2/auth?response_type=code&client_id=your_client_id&redirect_uri=http://localhost:8080/oauth2callback&scope=email+r";
+    }
+
+    function handleOAuthCallback() {
+      var code = getUrlParameter("code");
+      var state = getUrlParameter("state");
+
+      var accessToken = exchangeCodeForAccessToken(code);
+
+      localStorage.setItem("accessToken", accessToken);
+    }
+
+    function exchangeCodeForAccessToken(code) {
+      var tokenUrl =
+        "https://oauth2.googleapis.com/token?code=" +
+        code +
+        "&client_id=your_client_id&client_secret=" +
+        clientSecret +
+        "&redirect_uri=http://localhost:8080/oauth2callback&grant_type=authorization_code";
+
+      return fetch(tokenUrl)
+        .then((response) => response.json())
+        .then((data) => data.access_token);
+    }
+
+    function getUrlParameter(name) {
+      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+      var results = regex.exec(location.search);
+      return results === null
+        ? ""
+        : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+  </script>
+</html>
