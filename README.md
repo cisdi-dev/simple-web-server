@@ -11,4 +11,4 @@ The directory structure for this project is as follows:
 - `README.md`: containing information about the repo.
 - `index.html`: The main HTML.
 - `login.html`: Another HTML file.
-- `server.js`: The Node.js server code.
+- `index.js`: The Node.js server code.
