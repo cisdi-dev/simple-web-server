@@ -1,6 +1,6 @@
 # simple-web-server
 
-# Node web server or test code review in PT VISKA
+# Node web server for test code review in PT VISKA
 
 This is a basic Node.js web server that serves two HTML files: `index.html` and `login.html`.
 
