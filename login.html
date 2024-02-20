@@ -16,46 +16,47 @@
     </header>
     <button onclick="authenticateWithGoogle()">Authenticate with Google</button>
   </body>
-  <script>
-    handleOAuthCallback();
-  </script>
-  <script>
-    var clientSecret = "your_client_secret";
 
+  <script>
     function authenticateWithGoogle() {
-      window.location.href =
-        "http://accounts.google.com/oauth2/auth?response_type=code&client_id=your_client_id&redirect_uri=http://localhost:8080/oauth2callback&scope=email+r";
+      // This is a simulated Google OAuth2 flow, not secure for production use
+      var clientId =
+        "272820774213-rjd5puah51j7kipq9m3fk6vk0vudb6ha.apps.googleusercontent.com";
+      var redirectUri = window.location.origin;
+      var scope = "profile email";
+
+      var authUrl =
+        "https://accounts.google.com/o/oauth2/auth?" +
+        "client_id=" +
+        encodeURIComponent(clientId) +
+        "&redirect_uri=" +
+        encodeURIComponent(redirectUri) +
+        "&scope=" +
+        encodeURIComponent(scope) +
+        "&response_type=token";
+
+      window.location.href = authUrl;
     }
 
-    function handleOAuthCallback() {
-      var code = getUrlParameter("code");
-      var state = getUrlParameter("state");
+    function handleCallback() {
+      var hash = window.location.hash.substr(1);
+      var params = new URLSearchParams(hash);
 
-      var accessToken = exchangeCodeForAccessToken(code);
+      var accessToken = params.get("access_token");
 
-      localStorage.setItem("accessToken", accessToken);
-    }
+      console.log("Access Token: ", accessToken);
 
-    function exchangeCodeForAccessToken(code) {
-      var tokenUrl =
-        "https://oauth2.googleapis.com/token?code=" +
-        code +
-        "&client_id=your_client_id&client_secret=" +
-        clientSecret +
-        "&redirect_uri=http://localhost:8080/oauth2callback&grant_type=authorization_code";
-
-      return fetch(tokenUrl)
+      fetch(
+        "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" +
+          accessToken
+      )
         .then((response) => response.json())
-        .then((data) => data.access_token);
+        .then((data) => {
+          console.log(JSON.stringify(data));
+        })
+        .catch((error) => console.error("Error fetching user info: ", error));
     }
 
-    function getUrlParameter(name) {
-      name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
-      var results = regex.exec(location.search);
-      return results === null
-        ? ""
-        : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
+    window.onload = handleCallback;
   </script>
 </html>
